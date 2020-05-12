@@ -1,0 +1,269 @@
+{% extends "./base-sheji.html" %}
+
+{% block othercss %}
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block log %}{{ title }}{% endblock %}
+
+{% block mainbody %}
+<section class="wrapper">
+	      <div class="container">
+	      <h2>				</h2>
+				<h3 class="text-center">Welcome,生产流程管理系统</h3>
+	            <table width="100%">
+	                <td>
+	                    <a type="submit" class="btn btn-primary" data-toggle="modal" data-target="#register">添加</a>
+	                    <a type="submit" class="btn btn-danger" data-toggle="modal" data-target="#delete">删除</a>
+	                    <a type="submit" class="btn btn-success" data-toggle="modal" data-target="#modify">修改</a>
+	                </td>
+                    <br/>
+	            </table>
+	        </div>
+
+	        <div class="container">
+	        <table style="width: 1150px;" class="table table-striped table-hover table-bordered">
+
+
+	            <!--这里是表格-->
+	            <thead>
+	                <tr class="info">
+                        <th>工艺路线编号</th>
+	                    <th>工序号</th>
+                        <th>属于产品</th>
+                        <th>属于工作中心</th>
+                        <th>工序名称</th>
+                        <th>用料</th>
+                        <th>数量</th>
+                        <th>加工时间（小时）</th>
+                        <th>是否为关键工序</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                    {% for gongyiluxian in gongyiluxian_list %}
+	                        <tr>
+                                <td>{{gongyiluxian.id}}</td>
+	                            <td>{{gongyiluxian.gongxuhao}}</td>
+	                            <td>{{gongyiluxian.chanpin.name}}</td>
+                                <td>{{gongyiluxian.gongzuozhongxin.name}}</td>
+                                <td>{{gongyiluxian.name}}</td>
+                                <td>{{gongyiluxian.wuliao.name}}</td>
+                                <td>{{gongyiluxian.shuliang}}</td>
+                                <td>{{gongyiluxian.time}}</td>
+                                <td>{% if gongyiluxian.guanjiangongxu == True %}
+                                        是关键工序
+                                    {% else %}
+                                        不是关键工序
+                                    {% endif %}
+                                </td>
+	                        </tr>
+	                    {% endfor %}
+	            </tbody>
+	        </table>
+	    </div>
+
+
+	        <!-- 增加窗口 -->
+	    <div id="register" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">工艺路线信息</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'gongyiluxian_add' %}" method="post">
+	{#                            csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+                                <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="gongxuhao" placeholder="工序号"/>
+	                            </div>
+	                            <div class="form-group">
+                                    <label for="sel1">选择产品</label>
+                                    <select class="form-control" id="direction" name="xuanze">
+                                    {% for item in chanpin_list %}
+                                    <option value="{{ item.name }}" name="{{ item.name }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sel1">选择工作中心</label>
+                                    <select class="form-control" id="direction" name="xuanze2">
+                                    {% for item2 in gongzuozhongxin_list %}
+                                    <option value="{{ item2.name }}" name="{{ item2.name }}">{{ item2.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+	                            <!-- 输入车牌号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="name" placeholder="工序名称"/>
+	                            </div>
+                                <div class="form-group">
+                                    <label for="sel1">选择物料</label>
+                                    <select class="form-control" id="direction" name="xuanze3">
+                                    {% for item3 in wuliao_list %}
+                                    <option value="{{ item3.name }}" name="{{ item3.name }}">{{ item3.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="shuliang" placeholder="数量"/>
+	                            </div>
+                                <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="time" placeholder="时间"/>
+	                            </div>
+                                <div class="form-group">
+                                    <label for="sel1">是否为关键工序</label>
+                                    <select class="form-control" id="direction" name="xuanze4">
+                                    <option value="True" name="True">是关键工序</option>
+                                    <option value="False" name="False">不是关键工序</option>
+                                    </select>
+                                </div>
+                                <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="增加">增加并保存</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+
+	        <!-- 删除窗口 -->
+	    <div id="delete" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">请选择要删除的工艺路线编号</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'gongyiluxian_delete' %}" method="post">
+	{#                             csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-star"></i></span>
+	                                <input class="form-control" id="my_delete" name="my_delete" placeholder="请输入要删除的工艺路线编号"/>
+	                            </div>
+                                <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="增加">确定删除</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+
+	        <!-- 修改窗口 -->
+	    <div id="modify" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">修改工序路线信息</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'gongyiluxian_modify' %}" method="post">
+	{#                            csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-star"></i></span>
+	                                <input class="form-control" id="code" name="busCode" placeholder="请输入要修改工艺路线编号"/>
+	                            </div>
+	                            <!-- 输入车牌号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="gongxuhao" placeholder="工序号"/>
+	                            </div>
+	                            <div class="form-group">
+                                    <label for="sel1">选择产品</label>
+                                    <select class="form-control" id="direction" name="xuanze">
+                                    {% for item in chanpin_list %}
+                                    <option value="{{ item.name }}" name="{{ item.name }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sel1">选择工作中心</label>
+                                    <select class="form-control" id="direction" name="xuanze2">
+                                    {% for item2 in gongzuozhongxin_list %}
+                                    <option value="{{ item2.name }}" name="{{ item2.name }}">{{ item2.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+	                            <!-- 输入车牌号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="name" placeholder="工序名称"/>
+	                            </div>
+                                <div class="form-group">
+                                    <label for="sel1">选择物料</label>
+                                    <select class="form-control" id="direction" name="xuanze3">
+                                    {% for item3 in wuliao_list %}
+                                    <option value="{{ item3.name }}" name="{{ item3.name }}">{{ item3.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="shuliang" placeholder="数量"/>
+	                            </div>
+                                <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="time" placeholder="时间"/>
+	                            </div>
+                                <div class="form-group">
+                                    <label for="sel1">是否为关键工序</label>
+                                    <select class="form-control" id="direction" name="xuanze4">
+                                    <option value="True" name="True">是关键工序</option>
+                                    <option value="False" name="False">不是关键工序</option>
+                                    </select>
+                                </div>
+	                            <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="修改">修改并保存</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

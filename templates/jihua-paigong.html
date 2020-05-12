@@ -1,0 +1,195 @@
+{% extends "./base-jihua.html" %}
+
+{% block othercss %}
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block log %}{{ title }}{% endblock %}
+
+{% block mainbody %}
+<section class="wrapper">
+	      <div class="container">
+	      <h2>				</h2>
+				<h3 class="text-center">Welcome,生产流程管理系统</h3>
+	            <table width="100%">
+	                <td>
+	                    <a type="submit" class="btn btn-primary" data-toggle="modal" data-target="#register">添加</a>
+	                    <a type="submit" class="btn btn-danger" data-toggle="modal" data-target="#delete">删除</a>
+                        <a type="submit" class="btn btn-success" data-toggle="modal" data-target="#modify">修改</a>
+	                </td>
+                    <br/>
+	            </table>
+	        </div>
+
+	        <div class="container">
+	        <table style="width: 1150px;" class="table table-striped table-hover table-bordered">
+	            <!--这里是表格-->
+	            <thead>
+	                <tr class="info">
+	                    <th>派工单编号</th>
+                        <th>工作人员</th>
+                        <th>物料名称</th>
+                        <th>数量</th>
+                        <th>工作中心</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>紧前派工单</th>
+                        <th>紧后派工单</th>
+                        <th>领料状态</th>
+                        <th>质检状态</th>
+                        <th>工序转移状态</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                    {% for paigong in paigong_list %}
+	                        <tr>
+	                            <td>{{paigong.paigongcode}}</td>
+                                <td>{{paigong.user}}</td>
+                                <td>{{paigong.name}}</td>
+                                <td>{{paigong.shuliang}}</td>
+                                <td>{{paigong.gongzuozhongxin}}</td>
+                                <td>{{paigong.kaishi}}</td>
+                                <td>{{paigong.jieshu}}</td>
+                                <td>{{paigong.jinqian}}</td>
+                                <td>{{paigong.jinhou}}</td>
+                                <td>{% if paigong.lingliao == True %}
+                                        已领
+                                    {% else %}
+                                        未领
+                                    {% endif %}
+                                </td>
+                                <td>{% if paigong.zhijian == True %}
+                                        已申请质检
+                                    {% else %}
+                                        未申请质检
+                                    {% endif %}
+                                </td>
+                                <td>{% if paigong.zhuanyi == True %}
+                                        已完成工序转移
+                                    {% else %}
+                                        未完成工序转移
+                                    {% endif %}
+                                </td>
+	                        </tr>
+	                    {% endfor %}
+	            </tbody>
+	        </table>
+	    </div>
+
+
+	        <!-- 增加窗口 -->
+	    <div id="register" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">增加粗能力分析信息</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'paigong_add' %}" method="post">
+	{#                            csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="form-group">
+                                    <label for="sel1">选择主生产计划</label>
+                                    <select class="form-control" id="direction" name="xuanze">
+                                    {% for item in zhushengchan_list %}
+                                    <option value="{{ item.id }}" name="{{ item.id }}">{{ item.id }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="增加">增加并保存</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+
+	        <!-- 删除窗口 -->
+	    <div id="delete" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">请选择要删除粗能力分析编号</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'paigong_delete' %}" method="post">
+	{#                             csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-star"></i></span>
+	                                <input class="form-control" id="my_delete" name="my_delete" placeholder="请输入要删除的物料需求编号"/>
+	                            </div>
+                                <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="增加">确定删除</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+
+	        <!-- 修改窗口 -->
+	    <div id="modify" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">修改主生产信息</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'paigong_modify' %}" method="post">
+	{#                            csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-star"></i></span>
+	                                <input class="form-control" id="code" name="busCode" placeholder="请输入要修改的物料需求计划编号"/>
+	                            </div>
+	                            <!-- 输入修改后的车辆编号 -->
+                                <div class="form-group">
+                                    <label for="sel1">选择生产人员</label>
+                                    <select class="form-control" id="direction" name="xuanze2">
+                                    {% for user in User_list %}
+                                    <option value="{{ user.name }}" name="{{ user.name }}">{{ user.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+	                            <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="修改">修改并保存</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

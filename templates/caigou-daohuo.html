@@ -1,0 +1,124 @@
+{% extends "./base-caigou.html" %}
+
+{% block othercss %}
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block log %}{{ title }}{% endblock %}
+
+{% block mainbody %}
+<section class="wrapper">
+	      <div class="container">
+	      <h2>				</h2>
+				<h3 class="text-center">Welcome,生产流程管理系统</h3>
+	            <table width="100%">
+	                <td>
+	                    <a type="submit" class="btn btn-primary" data-toggle="modal" data-target="#register">增加</a>
+                        <a type="submit" class="btn btn-danger" data-toggle="modal" data-target="#delete">删除</a>
+	                </td>
+                    <br/>
+	            </table>
+	        </div>
+	        
+	        <div class="container">
+	        <table style="width: 1150px;" class="table table-striped table-hover table-bordered">
+	
+	
+	            <!--这里是表格-->
+	            <thead>
+	                <tr class="info">
+	                    <th>到货通知单编号</th>
+                        <th>物料名称</th>
+                        <th>物料数量</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                    {% for caigou in daohuo_list %}
+	                        <tr>
+	                            <td>{{caigou.id}}</td>
+                                <td>{{caigou.name}}</td>
+                                <td>{{caigou.shuliang}}</td>
+	                        </tr>
+	                    {% endfor %}
+	            </tbody>
+	        </table>
+	    </div>
+	
+	
+	        <!-- 增加窗口 -->
+	    <div id="register" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">计算采购情况</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'daohuo_add' %}" method="post">
+	{#                            csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="form-group">
+                                    <label for="sel1">选择采购计划</label>
+                                    <select class="form-control" id="direction" name="xuanze">
+                                    {% for item in caigou_list %}
+                                    <option value="{{ item.id }}" name="{{ item.id }}">{{ item.id }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-user"></i></span>
+	                                <input class="form-control" id="loginName" name="qianming" placeholder="请签名"/>
+	                            </div>
+                                <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="增加">增加并保存</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+        <div id="delete" class="modal fade" tabindex="-1">
+	        <div class="modal_wrapper">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <button class="close" data-dismiss="modal">
+	                            <span>×</span>
+	                        </button>
+	                    </div>
+	                    <div class="modal-title">
+	                        <h1 class="text-center">请选择要删除的到货通知单编号</h1>
+	                    </div>
+	                    <div action="index" class="modal-body">
+	                        <form action="{%url 'daohuo_delete' %}" method="post">
+	{#                             csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+	                            {%csrf_token%}
+	                            <!-- 输入车辆编号 -->
+	                            <div class="edit input-group input-group-md">
+	                            <span class="input-group-addon">
+	                                <i class="glyphicon glyphicon-star"></i></span>
+	                                <input class="form-control" id="my_delete" name="my_delete" placeholder="请输入要删除的到货通知单编号"/>
+	                            </div>
+                                <br/>
+	                            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="增加">确定删除</button>
+	                            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

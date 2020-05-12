@@ -1,0 +1,89 @@
+{% extends "./base-shengchan.html" %}
+
+{% block othercss %}
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block log %}{{ title }}{% endblock %}
+
+{% block mainbody %}
+<section class="wrapper">
+	      <div class="container">
+	      <h2>				</h2>
+				<h3 class="text-center">Welcome,生产流程管理系统</h3>
+	            <table width="100%">
+                    <td align="right">
+                        <form action="{%url 'scpaigong_chaxun' %}" class="form-inline" role="form" method="post">
+            {#                        csrf_token 是为了防止csrf（跨站请求伪造）,安全机制去，需要加上#}
+                            {%csrf_token%}
+                            <!-- 站点名称 -->
+                            <div class="form-group">
+                                <p>输入员工姓名</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="user_name" name="three" placeholder="">
+                            </div>
+                          <button type="submit" class="btn btn-info">查询</button>
+                        </form>
+                    </td>
+	            </table>
+	        </div>
+
+	        <div class="container">
+	        <table style="width: 1150px;" class="table table-striped table-hover table-bordered">
+	            <!--这里是表格-->
+	            <thead>
+	                <tr class="info">
+	                    <th>派工单编号</th>
+                        <th>工作人员</th>
+                        <th>物料名称</th>
+                        <th>数量</th>
+                        <th>工作中心</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>紧前派工单</th>
+                        <th>紧后派工单</th>
+                        <th>领料状态</th>
+                        <th>质检状态</th>
+                        <th>工序转移状态</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                    {% for paigong in scpaigong_list %}
+	                        <tr>
+	                            <td>{{paigong.paigongcode}}</td>
+                                <td>{{paigong.user}}</td>
+                                <td>{{paigong.name}}</td>
+                                <td>{{paigong.shuliang}}</td>
+                                <td>{{paigong.gongzuozhongxin}}</td>
+                                <td>{{paigong.kaishi}}</td>
+                                <td>{{paigong.jieshu}}</td>
+                                <td>{{paigong.jinqian}}</td>
+                                <td>{{paigong.jinhou}}</td>
+                                <td>{% if paigong.lingliao == True %}
+                                        已领
+                                    {% else %}
+                                        未领
+                                    {% endif %}
+                                </td>
+                                <td>{% if paigong.zhijian == True %}
+                                        已申请质检
+                                    {% else %}
+                                        未申请质检
+                                    {% endif %}
+                                </td>
+                                <td>{% if paigong.zhuanyi == True %}
+                                        已完成工序转移
+                                    {% else %}
+                                        未完成工序转移
+                                    {% endif %}
+                                </td>
+	                        </tr>
+	                    {% endfor %}
+	            </tbody>
+	        </table>
+	    </div>
+{% block scripts %}
+{% endblock %}
+
+</section>
+{% endblock %}
